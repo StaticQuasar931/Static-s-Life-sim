@@ -24,11 +24,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: background 0.3s, color 0.3s;
         }
         /* Game Container */
         #game-container {
             width: 95%;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 20px auto;
             padding: 25px;
             background-color: #ffffff;
@@ -71,20 +72,32 @@
         #play-link a:hover {
             text-decoration: underline;
         }
+        /* Settings */
+        #settings {
+            margin-top: 20px;
+        }
         /* Stats Section */
         #stats {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
             margin: 20px 0;
         }
         .stat {
-            flex: 1 1 30%;
-            margin: 10px 0;
+            background-color: #f0f4f7;
+            padding: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
         }
         .stat p {
             font-size: 1.1em;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat p i {
+            margin-left: 8px;
         }
         .stat-value {
             font-weight: bold;
@@ -106,7 +119,7 @@
             transition: width 0.5s, background-color 0.3s;
         }
         /* Buttons */
-        .actions, #career-path, #shop-container, #planner, #save-container, #settings, #inventory, #achievements {
+        .actions, #career-path, #shop-container, #planner, #save-container, #inventory, #achievements {
             margin: 20px 0;
         }
         button {
@@ -119,6 +132,12 @@
             background-color: #4a90e2;
             color: #fff;
             transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button i {
+            margin-right: 8px;
         }
         button:hover {
             background-color: #357ABD;
@@ -127,6 +146,11 @@
         }
         button:active {
             transform: translateY(0);
+            box-shadow: none;
+        }
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
             box-shadow: none;
         }
         /* Messages */
@@ -159,6 +183,7 @@
             background-color: #e6f7ff;
             padding: 20px;
             border-radius: 10px;
+            text-align: center;
         }
         #planner h3 {
             margin-bottom: 15px;
@@ -169,6 +194,7 @@
             background-color: #fff8e1;
             padding: 20px;
             border-radius: 10px;
+            text-align: center;
         }
         #shop-container h3 {
             margin-bottom: 15px;
@@ -182,52 +208,16 @@
             background-color: #e8f5e9;
             padding: 20px;
             border-radius: 10px;
+            text-align: center;
         }
         #career-path h3 {
             margin-bottom: 15px;
             color: #43a047;
         }
-        /* Save Button */
+        /* Save and Reset */
         #save-container {
             margin-top: 20px;
-        }
-        /* Settings */
-        #settings {
-            margin-top: 20px;
-        }
-        /* Dark Mode */
-        body.dark-mode {
-            background: linear-gradient(135deg, #2c3e50, #4ca1af);
-            color: #ecf0f1;
-        }
-        body.dark-mode #game-container {
-            background-color: #34495e;
-            color: #ecf0f1;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-        }
-        body.dark-mode button {
-            background-color: #2980b9;
-            color: #ecf0f1;
-        }
-        body.dark-mode button:hover {
-            background-color: #1c5980;
-        }
-        body.dark-mode #messages {
-            background-color: #2c3e50;
-            border-left: 5px solid #1abc9c;
-        }
-        body.dark-mode .message {
-            background-color: #34495e;
-            border-left: 4px solid #1abc9c;
-        }
-        body.dark-mode #planner {
-            background-color: #1abc9c;
-        }
-        body.dark-mode #shop-container {
-            background-color: #f39c12;
-        }
-        body.dark-mode #career-path {
-            background-color: #27ae60;
+            text-align: center;
         }
         /* Inventory */
         #inventory {
@@ -235,17 +225,19 @@
             padding: 15px;
             background-color: #f3e5f5;
             border-radius: 8px;
+            text-align: center;
         }
         #inventory h3 {
             margin-bottom: 10px;
             color: #9c27b0;
         }
         .inventory-item {
-            margin: 5px 0;
+            margin: 5px 5px;
             padding: 5px 10px;
             background-color: #e1bee7;
             border-radius: 4px;
             display: inline-block;
+            font-size: 0.9em;
         }
         /* Achievements */
         #achievements {
@@ -253,17 +245,19 @@
             padding: 15px;
             background-color: #fce4ec;
             border-radius: 8px;
+            text-align: center;
         }
         #achievements h3 {
             margin-bottom: 10px;
             color: #e91e63;
         }
         .achievement {
-            margin: 5px 0;
+            margin: 5px 5px;
             padding: 5px 10px;
             background-color: #f8bbd0;
             border-radius: 4px;
             display: inline-block;
+            font-size: 0.9em;
         }
         /* Age Warning */
         #age-warning {
@@ -274,16 +268,61 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             #stats {
-                flex-direction: column;
-                align-items: center;
-            }
-            .stat {
-                flex: 1 1 80%;
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
             }
             button {
-                width: 80%;
+                width: 90%;
                 margin: 8px auto;
             }
+        }
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: #ecf0f1;
+        }
+        body.dark-mode #game-container {
+            background-color: #34495e;
+            color: #ecf0f1;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        body.dark-mode .stat {
+            background-color: #2c3e50;
+        }
+        body.dark-mode .stat p, body.dark-mode .stat-value {
+            color: #ecf0f1;
+        }
+        body.dark-mode .progress-bar {
+            background-color: #555;
+        }
+        body.dark-mode .message {
+            background-color: #34495e;
+            border-left: 4px solid #1abc9c;
+        }
+        body.dark-mode #messages {
+            background-color: #2c3e50;
+            border-left: 5px solid #1abc9c;
+        }
+        body.dark-mode #planner {
+            background-color: #1abc9c;
+        }
+        body.dark-mode #shop-container {
+            background-color: #f39c12;
+        }
+        body.dark-mode #career-path {
+            background-color: #27ae60;
+        }
+        body.dark-mode #inventory {
+            background-color: #8e44ad;
+        }
+        body.dark-mode #achievements {
+            background-color: #c0392b;
+        }
+        body.dark-mode button {
+            background-color: #2980b9;
+            color: #ecf0f1;
+        }
+        body.dark-mode button:hover {
+            background-color: #1c5980;
         }
     </style>
 </head>
@@ -291,58 +330,58 @@
     <div id="game-container">
         <!-- Creator Credit -->
         <div id="creator-credit">
-            <a href="https://sites.google.com/view/staticquasar931" target="_blank">Made By Static</a>
+            <a href="https://sites.google.com/view/staticquasar931" target="_blank" aria-label="Visit Static's Google Site">Made By Static</a>
         </div>
         <!-- Header -->
         <h1>Life Simulator Demo</h1>
         <!-- Play Link -->
         <div id="play-link">
-            Play at <a href="https://sites.google.com/view/staticquasar931/static-gmes/statics-life-sim" target="_blank">Static's Life Sim</a>
+            Play at <a href="https://sites.google.com/view/staticquasar931/static-gmes/statics-life-sim" target="_blank" aria-label="Play the game on Static's Life Sim site">Static's Life Sim</a>
         </div>
         <!-- Settings -->
         <div id="settings">
-            <button onclick="toggleDarkMode()"><i class="fas fa-moon"></i> Toggle Dark Mode</button>
+            <button onclick="toggleDarkMode()" aria-label="Toggle Dark Mode"><i class="fas fa-moon"></i> Toggle Dark Mode</button>
         </div>
         <!-- Stats -->
         <div id="stats">
             <div class="stat">
                 <p>Energy <i class="fas fa-bolt emoji"></i></p>
-                <div class="progress-bar">
+                <div class="progress-bar" aria-label="Energy Level">
                     <div class="progress" id="energy-bar"></div>
                 </div>
                 <span class="stat-value" id="energy">100</span>
             </div>
             <div class="stat">
                 <p>Money <i class="fas fa-money-bill-wave emoji"></i></p>
-                <div class="progress-bar">
+                <div class="progress-bar" aria-label="Money Level">
                     <div class="progress" id="money-bar"></div>
                 </div>
                 <span class="stat-value" id="money">50</span>
             </div>
             <div class="stat">
                 <p>Happiness <i class="fas fa-smile emoji"></i></p>
-                <div class="progress-bar">
+                <div class="progress-bar" aria-label="Happiness Level">
                     <div class="progress" id="happiness-bar"></div>
                 </div>
                 <span class="stat-value" id="happiness">100</span>
             </div>
             <div class="stat">
                 <p>Intelligence <i class="fas fa-brain emoji"></i></p>
-                <div class="progress-bar">
+                <div class="progress-bar" aria-label="Intelligence Level">
                     <div class="progress" id="intelligence-bar"></div>
                 </div>
                 <span class="stat-value" id="intelligence">0</span>
             </div>
             <div class="stat">
                 <p>Strength <i class="fas fa-dumbbell emoji"></i></p>
-                <div class="progress-bar">
+                <div class="progress-bar" aria-label="Strength Level">
                     <div class="progress" id="strength-bar"></div>
                 </div>
                 <span class="stat-value" id="strength">0</span>
             </div>
             <div class="stat">
                 <p>Age <i class="fas fa-hourglass-half emoji"></i></p>
-                <div class="progress-bar">
+                <div class="progress-bar" aria-label="Age Progress">
                     <div class="progress" id="age-bar"></div>
                 </div>
                 <span class="stat-value" id="age">18</span>
@@ -354,49 +393,50 @@
         </div>
         <!-- Actions -->
         <div class="actions">
-            <button onclick="work()"><i class="fas fa-briefcase"></i> Work</button>
-            <button onclick="rest()"><i class="fas fa-bed"></i> Rest</button>
-            <button onclick="play()"><i class="fas fa-gamepad"></i> Play</button>
-            <button onclick="study()"><i class="fas fa-book"></i> Study</button>
-            <button onclick="exercise()"><i class="fas fa-dumbbell"></i> Exercise</button>
+            <button onclick="work()" aria-label="Work"><i class="fas fa-briefcase"></i> Work</button>
+            <button onclick="rest()" aria-label="Rest"><i class="fas fa-bed"></i> Rest</button>
+            <button onclick="play()" aria-label="Play"><i class="fas fa-gamepad"></i> Play</button>
+            <button onclick="study()" aria-label="Study"><i class="fas fa-book"></i> Study</button>
+            <button onclick="exercise()" aria-label="Exercise"><i class="fas fa-dumbbell"></i> Exercise</button>
         </div>
         <!-- Career Path -->
         <div id="career-path">
             <h3>Career Path</h3>
-            <button onclick="selectCareer('Engineer')"><i class="fas fa-laptop-code"></i> Become an Engineer</button>
-            <button onclick="selectCareer('Teacher')"><i class="fas fa-chalkboard-teacher"></i> Become a Teacher</button>
-            <button onclick="selectCareer('Artist')"><i class="fas fa-paint-brush"></i> Become an Artist</button>
+            <button onclick="selectCareer('Engineer')" aria-label="Become an Engineer"><i class="fas fa-laptop-code"></i> Become an Engineer</button>
+            <button onclick="selectCareer('Teacher')" aria-label="Become a Teacher"><i class="fas fa-chalkboard-teacher"></i> Become a Teacher</button>
+            <button onclick="selectCareer('Artist')" aria-label="Become an Artist"><i class="fas fa-paint-brush"></i> Become an Artist</button>
         </div>
         <!-- Messages -->
-        <div id="messages"></div>
+        <div id="messages" aria-live="polite" aria-atomic="true">
+            <!-- Messages will appear here -->
+        </div>
         <!-- Planner -->
         <div id="planner">
             <h3>Daily Planner 📝</h3>
-            <button onclick="planActivity('Work')"><i class="fas fa-briefcase"></i> Plan Work</button>
-            <button onclick="planActivity('Study')"><i class="fas fa-book"></i> Plan Study</button>
-            <button onclick="planActivity('Exercise')"><i class="fas fa-dumbbell"></i> Plan Exercise</button>
+            <button onclick="planActivity('Work')" aria-label="Plan to Work"><i class="fas fa-briefcase"></i> Plan Work</button>
+            <button onclick="planActivity('Study')" aria-label="Plan to Study"><i class="fas fa-book"></i> Plan Study</button>
+            <button onclick="planActivity('Exercise')" aria-label="Plan to Exercise"><i class="fas fa-dumbbell"></i> Plan Exercise</button>
         </div>
         <!-- Shop -->
         <div id="shop-container">
             <h3>Shop 🛒</h3>
             <div class="shop-item">
-                <button onclick="buyItem('Energy Drink', 10)"><i class="fas fa-cocktail"></i> Buy Energy Drink (10 💰)</button>
+                <button onclick="buyItem('Energy Drink', 10)" aria-label="Buy Energy Drink"><i class="fas fa-cocktail"></i> Buy Energy Drink (10 💰)</button>
             </div>
             <div class="shop-item">
-                <button onclick="buyItem('Book', 15)"><i class="fas fa-book"></i> Buy Book (15 💰)</button>
+                <button onclick="buyItem('Book', 15)" aria-label="Buy Book"><i class="fas fa-book"></i> Buy Book (15 💰)</button>
             </div>
             <div class="shop-item">
-                <button onclick="buyItem('Gift', 20)"><i class="fas fa-gift"></i> Buy Gift (20 💰)</button>
+                <button onclick="buyItem('Gift', 20)" aria-label="Buy Gift"><i class="fas fa-gift"></i> Buy Gift (20 💰)</button>
             </div>
             <div class="shop-item">
-                <button onclick="buyItem('Food', 5)"><i class="fas fa-utensils"></i> Buy Food (5 💰)</button>
+                <button onclick="buyItem('Food', 5)" aria-label="Buy Food"><i class="fas fa-utensils"></i> Buy Food (5 💰)</button>
             </div>
         </div>
         <!-- Inventory -->
         <div id="inventory">
             <h3>Inventory 🛍️</h3>
             <div id="inventory-items">
-                <!-- Dynamically added items -->
                 <p>No items in inventory.</p>
             </div>
         </div>
@@ -404,17 +444,16 @@
         <div id="achievements">
             <h3>Achievements 🏆</h3>
             <div id="achievement-list">
-                <!-- Dynamically added achievements -->
                 <p>No achievements yet.</p>
             </div>
         </div>
         <!-- Save and Reset -->
         <div id="save-container">
-            <button onclick="saveProgress()"><i class="fas fa-save"></i> Save Game</button>
-            <button onclick="resetGame()"><i class="fas fa-redo"></i> Reset Game</button>
+            <button onclick="saveProgress()" aria-label="Save Game"><i class="fas fa-save"></i> Save Game</button>
+            <button onclick="resetGame()" aria-label="Reset Game"><i class="fas fa-redo"></i> Reset Game</button>
         </div>
         <!-- Age Warning -->
-        <div id="age-warning"></div>
+        <div id="age-warning" aria-live="assertive"></div>
     </div>
 
     <script>
@@ -430,6 +469,11 @@
         let achievements = JSON.parse(localStorage.getItem('achievements')) || [];
         let darkMode = localStorage.getItem('darkMode') || 'disabled';
         let isAlive = true;
+
+        // Initialize Dark Mode before content loads
+        if (darkMode === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
 
         // Update stats on page load
         updateStats();
@@ -525,7 +569,7 @@
 
         function rest() {
             energy = Math.min(energy + 30, 100);
-            happiness -= 5;
+            happiness = Math.max(happiness - 5, 0);
             addMessage("You rested and gained some energy. 🛌 +30 ⚡");
             triggerAutosave();
             updateStats();
@@ -535,7 +579,7 @@
             if (energy >= 10 && money >= 10) {
                 energy -= 10;
                 money -= 10;
-                happiness += 20;
+                happiness = Math.min(happiness + 20, 100);
                 addMessage("You played and had fun! 🎮 -10 ⚡, -10 💰, +20 😊");
                 triggerAutosave();
             } else {
@@ -547,8 +591,8 @@
         function study() {
             if (energy >= 15) {
                 energy -= 15;
-                intelligence += 10;
-                happiness -= 5;
+                intelligence = Math.min(intelligence + 10, 100);
+                happiness = Math.max(happiness - 5, 0);
                 addMessage("You studied and gained intelligence! 📚 -15 ⚡, +10 🧠");
                 triggerAutosave();
             } else {
@@ -560,8 +604,8 @@
         function exercise() {
             if (energy >= 20) {
                 energy -= 20;
-                strength += 10;
-                happiness += 5;
+                strength = Math.min(strength + 10, 100);
+                happiness = Math.min(happiness + 5, 100);
                 addMessage("You exercised and gained strength! 🏋️ -20 ⚡, +10 💪, +5 😊");
                 triggerAutosave();
             } else {
@@ -611,16 +655,16 @@
                     inventory.push('Energy Drink');
                     addMessage(`You bought an Energy Drink! ⚡ +20`);
                 } else if (item === 'Book') {
-                    intelligence += 5;
+                    intelligence = Math.min(intelligence + 5, 100);
                     inventory.push('Book');
                     addMessage(`You bought a Book! 📚 +5 🧠`);
                 } else if (item === 'Gift') {
-                    happiness += 10;
+                    happiness = Math.min(happiness + 10, 100);
                     inventory.push('Gift');
                     addMessage(`You bought a Gift! 🎁 +10 😊`);
                 } else if (item === 'Food') {
                     energy = Math.min(energy + 15, 100);
-                    happiness += 5;
+                    happiness = Math.min(happiness + 5, 100);
                     inventory.push('Food');
                     addMessage(`You bought Food! 🍽️ +15 ⚡, +5 😊`);
                 }
@@ -713,27 +757,27 @@
                     addMessage("You tripped and lost some energy! ⚡ -10");
                 },
                 () => {
-                    happiness += 15;
+                    happiness = Math.min(happiness + 15, 100);
                     addMessage("You received a surprise gift and felt happier! 🎁 +15 😊");
                 },
                 () => {
-                    intelligence += 5;
+                    intelligence = Math.min(intelligence + 5, 100);
                     addMessage("You attended a free workshop and gained some knowledge! 🧠 +5");
                 },
                 () => {
-                    strength += 5;
+                    strength = Math.min(strength + 5, 100);
                     addMessage("You lifted a heavy object and became stronger! 💪 +5");
                 },
                 () => {
                     let chance = Math.random();
-                    if (chance < 0.1 && age < 100) {
+                    if (chance < 0.05 && age < 100) { // 5% chance of death
                         isAlive = false;
                         addMessage("You encountered a life-threatening accident. 😢 You have died.");
                         gameOver();
-                    } else if (chance < 0.2 && age >= 18 && money < 0) {
+                    } else if (chance < 0.15 && age >= 18 && money < 0) { // 10% chance of homelessness
                         addMessage("You have become homeless due to lack of funds. 🏚️");
                         resetToUnemployed();
-                    } else {
+                    } else if (chance >= 0.15 && chance < 0.25) { // 10% chance of neutral event
                         addMessage("A neutral day passed. Nothing special happened.");
                     }
                 }
@@ -776,16 +820,7 @@
         // Already handled via updateInventory()
 
         // Initialize Dark Mode based on preference
-        if (darkMode === 'enabled') {
-            document.body.classList.add('dark-mode');
-        }
-
-        // Listen for dark mode toggle to save preference
-        const originalToggleDarkMode = toggleDarkMode;
-        toggleDarkMode = function() {
-            originalToggleDarkMode();
-            // Dark mode state is handled within the toggle function
-        }
+        // Already handled at the top of the script
 
         // Game Over Function
         function gameOver() {
@@ -798,8 +833,6 @@
             const buttons = document.querySelectorAll('.actions button, #career-path button, #planner button, #shop-container button');
             buttons.forEach(button => {
                 button.disabled = true;
-                button.style.backgroundColor = '#aaa';
-                button.style.cursor = 'not-allowed';
             });
         }
 
@@ -823,14 +856,67 @@
             }
         }
 
-        // Aging Mechanism: Increase age every 5 minutes
+        // Aging Mechanism: Increase age every minute
         setInterval(function() {
             if (!isAlive) return;
             age += 1;
             addMessage("A year has passed. You are now " + age + " years old.");
             updateStats();
-        }, 300000); // 5 minutes
+        }, 60000); // 1 minute
 
+        // Additional Enhancements: Using Inventory Items
+        // Example: Players can use items by clicking them in the inventory
+        document.getElementById('inventory-items').addEventListener('click', function(e) {
+            if (e.target && e.target.matches('.inventory-item')) {
+                useItem(e.target.textContent);
+            }
+        });
+
+        function useItem(item) {
+            if (!inventory.includes(item)) {
+                addMessage(`You do not have a ${item} to use.`);
+                return;
+            }
+            switch(item) {
+                case 'Energy Drink':
+                    energy = Math.min(energy + 20, 100);
+                    addMessage("You used an Energy Drink! ⚡ +20");
+                    break;
+                case 'Book':
+                    intelligence = Math.min(intelligence + 10, 100);
+                    addMessage("You read a Book! 🧠 +10");
+                    break;
+                case 'Gift':
+                    happiness = Math.min(happiness + 15, 100);
+                    addMessage("You opened a Gift! 😊 +15");
+                    break;
+                case 'Food':
+                    energy = Math.min(energy + 15, 100);
+                    happiness = Math.min(happiness + 5, 100);
+                    addMessage("You ate Food! 🍽️ +15 ⚡, +5 😊");
+                    break;
+                default:
+                    addMessage("You used a mysterious item.");
+            }
+            // Remove the used item from inventory
+            inventory.splice(inventory.indexOf(item), 1);
+            updateInventory();
+            triggerAutosave();
+            updateStats();
+        }
+
+        // Enhanced Accessibility: Keyboard Navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 's' && event.ctrlKey) { // Ctrl+S for saving
+                event.preventDefault();
+                saveProgress();
+                addMessage("Game saved! 💾");
+            }
+            if (event.key === 'r' && event.ctrlKey) { // Ctrl+R for resetting
+                event.preventDefault();
+                resetGame();
+            }
+        });
     </script>
 </body>
 </html>
