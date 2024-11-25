@@ -1,1 +1,836 @@
-aaa
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Simulator Demo</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrQdPp6uXgVYt7JuVXmYlHgL7MVpVmxUpmAqfGwD4bFyvh0KvRsmR1hYpjwTIyM6rUNp4V0sE7FekFF5Yg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Reset and Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        /* Game Container */
+        #game-container {
+            width: 95%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 25px;
+            background-color: #ffffff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+        /* Creator Credit */
+        #creator-credit {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 0.9em;
+        }
+        #creator-credit a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #creator-credit a:hover {
+            text-decoration: underline;
+        }
+        /* Header */
+        #game-container h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #4a90e2;
+        }
+        /* Play Link */
+        #play-link {
+            margin-top: 10px;
+            font-size: 1em;
+        }
+        #play-link a {
+            color: #e91e63;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #play-link a:hover {
+            text-decoration: underline;
+        }
+        /* Stats Section */
+        #stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .stat {
+            flex: 1 1 30%;
+            margin: 10px 0;
+        }
+        .stat p {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.5em;
+            color: #333;
+        }
+        /* Progress Bars */
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            height: 20px;
+        }
+        .progress {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50;
+            transition: width 0.5s, background-color 0.3s;
+        }
+        /* Buttons */
+        .actions, #career-path, #shop-container, #planner, #save-container, #settings, #inventory, #achievements {
+            margin: 20px 0;
+        }
+        button {
+            padding: 12px 20px;
+            margin: 8px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #4a90e2;
+            color: #fff;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        }
+        button:hover {
+            background-color: #357ABD;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+        /* Messages */
+        #messages {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #4caf50;
+            border-radius: 5px;
+            min-height: 60px;
+            max-height: 250px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .message {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #fff;
+            border-left: 4px solid #4a90e2;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Planner */
+        #planner {
+            background-color: #e6f7ff;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #planner h3 {
+            margin-bottom: 15px;
+            color: #007acc;
+        }
+        /* Shop */
+        #shop-container {
+            background-color: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #shop-container h3 {
+            margin-bottom: 15px;
+            color: #ffb300;
+        }
+        .shop-item {
+            margin: 10px 0;
+        }
+        /* Career Path */
+        #career-path {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        #career-path h3 {
+            margin-bottom: 15px;
+            color: #43a047;
+        }
+        /* Save Button */
+        #save-container {
+            margin-top: 20px;
+        }
+        /* Settings */
+        #settings {
+            margin-top: 20px;
+        }
+        /* Dark Mode */
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: #ecf0f1;
+        }
+        body.dark-mode #game-container {
+            background-color: #34495e;
+            color: #ecf0f1;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        body.dark-mode button {
+            background-color: #2980b9;
+            color: #ecf0f1;
+        }
+        body.dark-mode button:hover {
+            background-color: #1c5980;
+        }
+        body.dark-mode #messages {
+            background-color: #2c3e50;
+            border-left: 5px solid #1abc9c;
+        }
+        body.dark-mode .message {
+            background-color: #34495e;
+            border-left: 4px solid #1abc9c;
+        }
+        body.dark-mode #planner {
+            background-color: #1abc9c;
+        }
+        body.dark-mode #shop-container {
+            background-color: #f39c12;
+        }
+        body.dark-mode #career-path {
+            background-color: #27ae60;
+        }
+        /* Inventory */
+        #inventory {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3e5f5;
+            border-radius: 8px;
+        }
+        #inventory h3 {
+            margin-bottom: 10px;
+            color: #9c27b0;
+        }
+        .inventory-item {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #e1bee7;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        /* Achievements */
+        #achievements {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fce4ec;
+            border-radius: 8px;
+        }
+        #achievements h3 {
+            margin-bottom: 10px;
+            color: #e91e63;
+        }
+        .achievement {
+            margin: 5px 0;
+            padding: 5px 10px;
+            background-color: #f8bbd0;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        /* Age Warning */
+        #age-warning {
+            color: #e53935;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            .stat {
+                flex: 1 1 80%;
+            }
+            button {
+                width: 80%;
+                margin: 8px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Creator Credit -->
+        <div id="creator-credit">
+            <a href="https://sites.google.com/view/staticquasar931" target="_blank">Made By Static</a>
+        </div>
+        <!-- Header -->
+        <h1>Life Simulator Demo</h1>
+        <!-- Play Link -->
+        <div id="play-link">
+            Play at <a href="https://sites.google.com/view/staticquasar931/static-gmes/statics-life-sim" target="_blank">Static's Life Sim</a>
+        </div>
+        <!-- Settings -->
+        <div id="settings">
+            <button onclick="toggleDarkMode()"><i class="fas fa-moon"></i> Toggle Dark Mode</button>
+        </div>
+        <!-- Stats -->
+        <div id="stats">
+            <div class="stat">
+                <p>Energy <i class="fas fa-bolt emoji"></i></p>
+                <div class="progress-bar">
+                    <div class="progress" id="energy-bar"></div>
+                </div>
+                <span class="stat-value" id="energy">100</span>
+            </div>
+            <div class="stat">
+                <p>Money <i class="fas fa-money-bill-wave emoji"></i></p>
+                <div class="progress-bar">
+                    <div class="progress" id="money-bar"></div>
+                </div>
+                <span class="stat-value" id="money">50</span>
+            </div>
+            <div class="stat">
+                <p>Happiness <i class="fas fa-smile emoji"></i></p>
+                <div class="progress-bar">
+                    <div class="progress" id="happiness-bar"></div>
+                </div>
+                <span class="stat-value" id="happiness">100</span>
+            </div>
+            <div class="stat">
+                <p>Intelligence <i class="fas fa-brain emoji"></i></p>
+                <div class="progress-bar">
+                    <div class="progress" id="intelligence-bar"></div>
+                </div>
+                <span class="stat-value" id="intelligence">0</span>
+            </div>
+            <div class="stat">
+                <p>Strength <i class="fas fa-dumbbell emoji"></i></p>
+                <div class="progress-bar">
+                    <div class="progress" id="strength-bar"></div>
+                </div>
+                <span class="stat-value" id="strength">0</span>
+            </div>
+            <div class="stat">
+                <p>Age <i class="fas fa-hourglass-half emoji"></i></p>
+                <div class="progress-bar">
+                    <div class="progress" id="age-bar"></div>
+                </div>
+                <span class="stat-value" id="age">18</span>
+            </div>
+            <div class="stat">
+                <p>Career <i class="fas fa-briefcase emoji"></i></p>
+                <span class="stat-value" id="career">Unemployed</span>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="actions">
+            <button onclick="work()"><i class="fas fa-briefcase"></i> Work</button>
+            <button onclick="rest()"><i class="fas fa-bed"></i> Rest</button>
+            <button onclick="play()"><i class="fas fa-gamepad"></i> Play</button>
+            <button onclick="study()"><i class="fas fa-book"></i> Study</button>
+            <button onclick="exercise()"><i class="fas fa-dumbbell"></i> Exercise</button>
+        </div>
+        <!-- Career Path -->
+        <div id="career-path">
+            <h3>Career Path</h3>
+            <button onclick="selectCareer('Engineer')"><i class="fas fa-laptop-code"></i> Become an Engineer</button>
+            <button onclick="selectCareer('Teacher')"><i class="fas fa-chalkboard-teacher"></i> Become a Teacher</button>
+            <button onclick="selectCareer('Artist')"><i class="fas fa-paint-brush"></i> Become an Artist</button>
+        </div>
+        <!-- Messages -->
+        <div id="messages"></div>
+        <!-- Planner -->
+        <div id="planner">
+            <h3>Daily Planner 📝</h3>
+            <button onclick="planActivity('Work')"><i class="fas fa-briefcase"></i> Plan Work</button>
+            <button onclick="planActivity('Study')"><i class="fas fa-book"></i> Plan Study</button>
+            <button onclick="planActivity('Exercise')"><i class="fas fa-dumbbell"></i> Plan Exercise</button>
+        </div>
+        <!-- Shop -->
+        <div id="shop-container">
+            <h3>Shop 🛒</h3>
+            <div class="shop-item">
+                <button onclick="buyItem('Energy Drink', 10)"><i class="fas fa-cocktail"></i> Buy Energy Drink (10 💰)</button>
+            </div>
+            <div class="shop-item">
+                <button onclick="buyItem('Book', 15)"><i class="fas fa-book"></i> Buy Book (15 💰)</button>
+            </div>
+            <div class="shop-item">
+                <button onclick="buyItem('Gift', 20)"><i class="fas fa-gift"></i> Buy Gift (20 💰)</button>
+            </div>
+            <div class="shop-item">
+                <button onclick="buyItem('Food', 5)"><i class="fas fa-utensils"></i> Buy Food (5 💰)</button>
+            </div>
+        </div>
+        <!-- Inventory -->
+        <div id="inventory">
+            <h3>Inventory 🛍️</h3>
+            <div id="inventory-items">
+                <!-- Dynamically added items -->
+                <p>No items in inventory.</p>
+            </div>
+        </div>
+        <!-- Achievements -->
+        <div id="achievements">
+            <h3>Achievements 🏆</h3>
+            <div id="achievement-list">
+                <!-- Dynamically added achievements -->
+                <p>No achievements yet.</p>
+            </div>
+        </div>
+        <!-- Save and Reset -->
+        <div id="save-container">
+            <button onclick="saveProgress()"><i class="fas fa-save"></i> Save Game</button>
+            <button onclick="resetGame()"><i class="fas fa-redo"></i> Reset Game</button>
+        </div>
+        <!-- Age Warning -->
+        <div id="age-warning"></div>
+    </div>
+
+    <script>
+        // Game Stats
+        let energy = parseInt(localStorage.getItem('energy')) || 100;
+        let money = parseInt(localStorage.getItem('money')) || 50;
+        let happiness = parseInt(localStorage.getItem('happiness')) || 100;
+        let intelligence = parseInt(localStorage.getItem('intelligence')) || 0;
+        let strength = parseInt(localStorage.getItem('strength')) || 0;
+        let age = parseInt(localStorage.getItem('age')) || 18;
+        let career = localStorage.getItem('career') || 'Unemployed';
+        let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+        let achievements = JSON.parse(localStorage.getItem('achievements')) || [];
+        let darkMode = localStorage.getItem('darkMode') || 'disabled';
+        let isAlive = true;
+
+        // Update stats on page load
+        updateStats();
+        updateInventory();
+        updateAchievements();
+
+        // Update stats display
+        function updateStats() {
+            document.getElementById('energy').textContent = energy;
+            document.getElementById('money').textContent = money;
+            document.getElementById('happiness').textContent = happiness;
+            document.getElementById('intelligence').textContent = intelligence;
+            document.getElementById('strength').textContent = strength;
+            document.getElementById('age').textContent = age;
+            document.getElementById('career').textContent = career;
+
+            // Update progress bars
+            document.getElementById('energy-bar').style.width = energy + '%';
+            document.getElementById('money-bar').style.width = money >= 100 ? '100%' : money + '%';
+            document.getElementById('happiness-bar').style.width = happiness + '%';
+            document.getElementById('intelligence-bar').style.width = intelligence >= 100 ? '100%' : intelligence + '%';
+            document.getElementById('strength-bar').style.width = strength >= 100 ? '100%' : strength + '%';
+            document.getElementById('age-bar').style.width = age >= 100 ? '100%' : age + '%';
+
+            // Change progress bar colors based on value
+            updateProgressBar('energy-bar', energy);
+            updateProgressBar('money-bar', money);
+            updateProgressBar('happiness-bar', happiness);
+            updateProgressBar('intelligence-bar', intelligence);
+            updateProgressBar('strength-bar', strength);
+            updateProgressBar('age-bar', age);
+
+            // Update age warning
+            checkAgeWarning();
+
+            saveProgress();
+            checkAchievements();
+        }
+
+        function updateProgressBar(id, value) {
+            const bar = document.getElementById(id);
+            if (value >= 70) {
+                bar.style.backgroundColor = '#4caf50';
+            } else if (value >= 40) {
+                bar.style.backgroundColor = '#ff9800';
+            } else {
+                bar.style.backgroundColor = '#f44336';
+            }
+        }
+
+        // Save progress to local storage
+        function saveProgress() {
+            localStorage.setItem('energy', energy);
+            localStorage.setItem('money', money);
+            localStorage.setItem('happiness', happiness);
+            localStorage.setItem('intelligence', intelligence);
+            localStorage.setItem('strength', strength);
+            localStorage.setItem('age', age);
+            localStorage.setItem('career', career);
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            localStorage.setItem('achievements', JSON.stringify(achievements));
+            localStorage.setItem('darkMode', darkMode);
+        }
+
+        // Add message to the messages container
+        function addMessage(message) {
+            const messagesContainer = document.getElementById('messages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.innerHTML = message;
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            saveProgress();
+        }
+
+        // Actions
+        function work() {
+            if (career === 'Unemployed') {
+                addMessage("You need to find a job first! 🕵️‍♂️");
+                return;
+            }
+            if (energy >= 20) {
+                energy -= 20;
+                money += getJobSalary();
+                happiness -= 10;
+                addMessage(`You worked as a ${career} and earned some money! 💼 +${getJobSalary()} 💰`);
+                triggerAutosave();
+            } else {
+                addMessage("You are too tired to work. Rest first! 🛌");
+            }
+            updateStats();
+        }
+
+        function rest() {
+            energy = Math.min(energy + 30, 100);
+            happiness -= 5;
+            addMessage("You rested and gained some energy. 🛌 +30 ⚡");
+            triggerAutosave();
+            updateStats();
+        }
+
+        function play() {
+            if (energy >= 10 && money >= 10) {
+                energy -= 10;
+                money -= 10;
+                happiness += 20;
+                addMessage("You played and had fun! 🎮 -10 ⚡, -10 💰, +20 😊");
+                triggerAutosave();
+            } else {
+                addMessage("You need more energy and money to play. ⚡ 💰");
+            }
+            updateStats();
+        }
+
+        function study() {
+            if (energy >= 15) {
+                energy -= 15;
+                intelligence += 10;
+                happiness -= 5;
+                addMessage("You studied and gained intelligence! 📚 -15 ⚡, +10 🧠");
+                triggerAutosave();
+            } else {
+                addMessage("You are too tired to study. Rest first! 🛌");
+            }
+            updateStats();
+        }
+
+        function exercise() {
+            if (energy >= 20) {
+                energy -= 20;
+                strength += 10;
+                happiness += 5;
+                addMessage("You exercised and gained strength! 🏋️ -20 ⚡, +10 💪, +5 😊");
+                triggerAutosave();
+            } else {
+                addMessage("You are too tired to exercise. Rest first! 🛌");
+            }
+            updateStats();
+        }
+
+        // Get Job Salary based on career
+        function getJobSalary() {
+            switch(career) {
+                case 'Engineer':
+                    return 50;
+                case 'Teacher':
+                    return 40;
+                case 'Artist':
+                    return 35;
+                default:
+                    return 30;
+            }
+        }
+
+        // Career Selection
+        function selectCareer(newCareer) {
+            if (career === 'Unemployed') {
+                career = newCareer;
+                addMessage(`You chose the career path of ${newCareer}! 🎉`);
+                triggerAutosave();
+                updateStats();
+            } else {
+                addMessage("You have already chosen a career path! 🎓");
+            }
+        }
+
+        // Daily Planner
+        function planActivity(activity) {
+            addMessage(`You planned to ${activity.toLowerCase()} later today. 📝`);
+            triggerAutosave();
+        }
+
+        // Shop System
+        function buyItem(item, cost) {
+            if (money >= cost) {
+                money -= cost;
+                if (item === 'Energy Drink') {
+                    energy = Math.min(energy + 20, 100);
+                    inventory.push('Energy Drink');
+                    addMessage(`You bought an Energy Drink! ⚡ +20`);
+                } else if (item === 'Book') {
+                    intelligence += 5;
+                    inventory.push('Book');
+                    addMessage(`You bought a Book! 📚 +5 🧠`);
+                } else if (item === 'Gift') {
+                    happiness += 10;
+                    inventory.push('Gift');
+                    addMessage(`You bought a Gift! 🎁 +10 😊`);
+                } else if (item === 'Food') {
+                    energy = Math.min(energy + 15, 100);
+                    happiness += 5;
+                    inventory.push('Food');
+                    addMessage(`You bought Food! 🍽️ +15 ⚡, +5 😊`);
+                }
+                updateInventory();
+                triggerAutosave();
+            } else {
+                addMessage(`You do not have enough money to buy a ${item}. 💰`);
+            }
+            updateStats();
+        }
+
+        // Update Inventory
+        function updateInventory() {
+            const inventoryContainer = document.getElementById('inventory-items');
+            inventoryContainer.innerHTML = '';
+            if (inventory.length === 0) {
+                inventoryContainer.innerHTML = '<p>No items in inventory.</p>';
+            } else {
+                inventory.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('inventory-item');
+                    itemDiv.textContent = item;
+                    inventoryContainer.appendChild(itemDiv);
+                });
+            }
+        }
+
+        // Achievements
+        function checkAchievements() {
+            // Example Achievements
+            if (money >= 100 && !achievements.includes('First Fortune')) {
+                achievements.push('First Fortune');
+                addAchievement('First Fortune');
+            }
+            if (intelligence >= 50 && !achievements.includes('Knowledge Seeker')) {
+                achievements.push('Knowledge Seeker');
+                addAchievement('Knowledge Seeker');
+            }
+            if (strength >= 50 && !achievements.includes('Strong as an Ox')) {
+                achievements.push('Strong as an Ox');
+                addAchievement('Strong as an Ox');
+            }
+            if (age >= 30 && !achievements.includes('Mature Adult')) {
+                achievements.push('Mature Adult');
+                addAchievement('Mature Adult');
+            }
+            if (age >= 60 && !achievements.includes('Wise Elder')) {
+                achievements.push('Wise Elder');
+                addAchievement('Wise Elder');
+            }
+            // Add more achievements as needed
+        }
+
+        function addAchievement(name) {
+            const achievementsContainer = document.getElementById('achievement-list');
+            const achievementDiv = document.createElement('div');
+            achievementDiv.classList.add('achievement');
+            achievementDiv.textContent = name;
+            achievementsContainer.appendChild(achievementDiv);
+            addMessage(`Achievement unlocked: ${name} 🏅`);
+            triggerAutosave();
+        }
+
+        function updateAchievements() {
+            const achievementsContainer = document.getElementById('achievement-list');
+            achievementsContainer.innerHTML = '';
+            if (achievements.length === 0) {
+                achievementsContainer.innerHTML = '<p>No achievements yet.</p>';
+            } else {
+                achievements.forEach(ach => {
+                    const achDiv = document.createElement('div');
+                    achDiv.classList.add('achievement');
+                    achDiv.textContent = ach;
+                    achievementsContainer.appendChild(achDiv);
+                });
+            }
+        }
+
+        // Random Event Generator
+        function randomEvent() {
+            if (!isAlive) return;
+
+            const events = [
+                () => {
+                    money += 20;
+                    addMessage("You found $20 on the ground! 💰 +20");
+                },
+                () => {
+                    energy = Math.max(energy - 10, 0);
+                    addMessage("You tripped and lost some energy! ⚡ -10");
+                },
+                () => {
+                    happiness += 15;
+                    addMessage("You received a surprise gift and felt happier! 🎁 +15 😊");
+                },
+                () => {
+                    intelligence += 5;
+                    addMessage("You attended a free workshop and gained some knowledge! 🧠 +5");
+                },
+                () => {
+                    strength += 5;
+                    addMessage("You lifted a heavy object and became stronger! 💪 +5");
+                },
+                () => {
+                    let chance = Math.random();
+                    if (chance < 0.1 && age < 100) {
+                        isAlive = false;
+                        addMessage("You encountered a life-threatening accident. 😢 You have died.");
+                        gameOver();
+                    } else if (chance < 0.2 && age >= 18 && money < 0) {
+                        addMessage("You have become homeless due to lack of funds. 🏚️");
+                        resetToUnemployed();
+                    } else {
+                        addMessage("A neutral day passed. Nothing special happened.");
+                    }
+                }
+            ];
+            const randomIndex = Math.floor(Math.random() * events.length);
+            events[randomIndex]();
+            updateStats();
+        }
+
+        // Trigger random event every minute
+        setInterval(randomEvent, 60000);
+
+        // Autosave every 15 seconds
+        setInterval(saveProgress, 15000);
+
+        // Trigger autosave on significant events
+        function triggerAutosave() {
+            saveProgress();
+        }
+
+        // Manual Save Button
+        // Already implemented via the Save Game button
+
+        // Reset Game
+        function resetGame() {
+            if (confirm("Are you sure you want to reset the game? All progress will be lost.")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        // Toggle Dark Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            darkMode = document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled';
+            saveProgress();
+        }
+
+        // Inventory Display
+        // Already handled via updateInventory()
+
+        // Initialize Dark Mode based on preference
+        if (darkMode === 'enabled') {
+            document.body.classList.add('dark-mode');
+        }
+
+        // Listen for dark mode toggle to save preference
+        const originalToggleDarkMode = toggleDarkMode;
+        toggleDarkMode = function() {
+            originalToggleDarkMode();
+            // Dark mode state is handled within the toggle function
+        }
+
+        // Game Over Function
+        function gameOver() {
+            addMessage("Game Over. Please reset to play again.");
+            disableAllActions();
+        }
+
+        // Disable all action buttons
+        function disableAllActions() {
+            const buttons = document.querySelectorAll('.actions button, #career-path button, #planner button, #shop-container button');
+            buttons.forEach(button => {
+                button.disabled = true;
+                button.style.backgroundColor = '#aaa';
+                button.style.cursor = 'not-allowed';
+            });
+        }
+
+        // Reset to Unemployed after Homelessness
+        function resetToUnemployed() {
+            career = 'Unemployed';
+            addMessage("You are now unemployed. Find a new job to earn money.");
+            updateStats();
+        }
+
+        // Check Age Warning
+        function checkAgeWarning() {
+            const ageWarning = document.getElementById('age-warning');
+            if (age >= 100) {
+                ageWarning.textContent = "You have reached the maximum age. Game Over.";
+                gameOver();
+            } else if (age >= 80) {
+                ageWarning.textContent = "You are approaching old age. Take care of your health!";
+            } else {
+                ageWarning.textContent = "";
+            }
+        }
+
+        // Aging Mechanism: Increase age every 5 minutes
+        setInterval(function() {
+            if (!isAlive) return;
+            age += 1;
+            addMessage("A year has passed. You are now " + age + " years old.");
+            updateStats();
+        }, 300000); // 5 minutes
+
+    </script>
+</body>
+</html>
